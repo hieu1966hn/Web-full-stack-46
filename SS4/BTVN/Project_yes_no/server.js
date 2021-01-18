@@ -3,12 +3,17 @@ const app = express(); //khoi tao 1 server sang 1 app
 const path = require('path');
 
 
+// app.use('\css',express.static(__dirname +'\style.css'));
 
 app.get('/', (req, res) => { // trình duyệt trả về giá trị
     console.log(__dirname); // bien co san cua nodeJS
     res.sendFile(path.resolve(__dirname,'./index.html')); // resolve: cong 2 cai path trong ngoac voi nhau => path tuy doi (giong concat)
 });
 
+
+app.get('/style.css',(req,res)=>{
+    res.sendFile(path.resolve(__dirname,'./style.css'));
+})
 // url + method
 // url: /get-o-question method: get, post, put(update), delete
 // get: gui duoc it du lieu hon post
