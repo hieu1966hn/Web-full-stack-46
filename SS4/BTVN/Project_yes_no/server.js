@@ -16,10 +16,76 @@ app.use(express.urlencoded({ extended: true })); // doc dc nhung du lieu ma clie
 
 app.use(express.json());
 
-app.get('/', (req, res) => { // trình duyệt trả về giá trị
+app.get('/ask', (req, res) => { // trình duyệt trả về giá trị
     console.log(__dirname); // bien co san cua nodeJS
     res.sendFile(path.resolve(__dirname, './public/ask/index.html')); // resolve: cong 2 cai path trong ngoac voi nhau => path tuy doi (giong concat)
 });
+
+app.get('/', (req, res) => {
+    res.sendFile(path.resolve(__dirname, './public/home/index.html'))
+})
+
+app.get('/random-question', (req, res) => {
+    let data;
+    try {
+        data = JSON.parse(fs.readFileSync('data.json'))
+    } catch (err) {
+        data = [];
+    }
+
+    const randomIdx = Math.floor(Math.random() * data.length)
+    const foundQuestion = data[randomIdx];
+
+    if (foundQuestion) {
+        return res.send({
+            success: 1,
+            data: foundQuestion
+        })
+    }
+    return res.send({
+        success: 0,
+        data: []
+    })
+});
+
+
+
+app.put('/add-vote/:idQuestion', (req, res) => { // express hỗ trợ bắt pragram để tránh phải tạo nhiều
+    // const idQuestion = req.params.idQuestion;
+    const { idQuestion } = req.params;
+    const { type } = req.body;
+
+    let data;
+    try {
+        data = JSON.parse(fs.readFileSync('data.json'))
+    } catch (err) {
+        data = [];
+    }
+
+    const foundQuestion = data.find(
+        question => {
+            const sameId = parseInt(question.__id) === parseInt(idQuestion);
+            return sameId;
+        }
+    );
+
+    if (foundQuestion) {
+        return res.send({
+            success: 1,
+            data: foundQuestion
+        })
+    }
+    
+    if(type ==='yes'){
+        
+    }
+
+    return res.send({
+        success: 0,
+        data: []
+    })
+});
+
 
 
 // app.get('/style.css', (req, res) => {

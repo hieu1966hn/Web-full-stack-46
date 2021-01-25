@@ -9,9 +9,22 @@ createForm.addEventListener('submit', (e) => {
     const question = { content: content };
 
     fetch('http://localhost:8080/create-question', {
-        method : 'POST',
+        method: 'POST',
         body: new URLSearchParams(question)
         // de lam gi?? (phai co)
     }).then(res => res.json())
-    .then(res => console.log(res));
+        .then(res => {
+            if (res.success) {
+                window.location.href = '/';
+
+            }
+        });
+})
+
+const restLengthDom = document.getElementById('restLength');
+textAreaQuestion.addEventListener('input', () => {
+    const content = textAreaQuestion.value.length;
+    const currentLength = content;
+
+    restLengthDom.innerHTML = 200 - currentLength;
 })
