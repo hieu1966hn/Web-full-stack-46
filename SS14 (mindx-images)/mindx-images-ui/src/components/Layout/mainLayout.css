@@ -1,0 +1,8 @@
+.main-layout {
+    min-height: 100vh;
+    background-color: #fafafa;
+  }
+  
+  .main-layout .navbar {
+    background-color: #ffffff!important;
+  }

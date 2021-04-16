@@ -4,15 +4,7 @@
 let idQuestion = '';
 
 const contentDOM = document.getElementById('contentQuestion');
-const getRandomQuestion = async() => {
-    // fetch('http://localhost:8080/random-question')
-    //     .then(res => res.json())
-    //     .then(res => {
-    //         if (res.success) {
-    //             contentDOM.innerHTML = res.data.content
-    //         }
-    //     })
-
+const getRandomQuestion = async () => {
     const res = await fetch('http://localhost:8080/random-question');
     const jsonRes = await res.json();
     if (jsonRes.success) {
@@ -32,6 +24,26 @@ otherBtn.addEventListener("click", () => {
     // window.location.reload();
     getRandomQuestion();
 })
+
+
+const handleVote = async (type) => {
+    try {
+        const res = await fetch(
+            `http://localhost:8080/add-vote/${idQuestion}`,
+            {
+                method: 'PUT',
+                body: new URLSearchParams({ type })
+            }
+        );
+        const jsonRes = await res.json();
+        if (jsonRes.success) {
+            window.location.href = `/question/${jsonRes.data._id}`
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 
 const yesBtn = document.getElementById('yesBtn');
 yesBtn.addEventListener('click', async () => {

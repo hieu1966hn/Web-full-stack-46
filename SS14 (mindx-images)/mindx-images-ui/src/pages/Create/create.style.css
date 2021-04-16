@@ -1,0 +1,21 @@
+.image-item .image-wrapper{
+    position: relative;
+    border: 1px red solid;
+    text-align: center;
+}
+
+.image-item span{
+    padding: 3px;
+    display: inline-block;
+    background-color: red;
+    border-radius: 100%;
+    text-align: center;
+    font-size: 6;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 0;
+    right: 15px;
+}
+
+

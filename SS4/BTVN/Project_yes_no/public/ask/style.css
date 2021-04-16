@@ -2,4 +2,6 @@ h2{
     font-size: 40px;
     color: red;
 }   
-
+textarea{
+    width: 100%;
+}

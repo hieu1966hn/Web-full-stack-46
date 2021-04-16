@@ -16,6 +16,8 @@ app.use(express.urlencoded({ extended: true })); // doc dc nhung du lieu ma clie
 
 app.use(express.json());
 
+
+
 app.get('/ask', (req, res) => { // trình duyệt trả về giá trị
     console.log(__dirname); // bien co san cua nodeJS
     res.sendFile(path.resolve(__dirname, './public/ask/index.html')); // resolve: cong 2 cai path trong ngoac voi nhau => path tuy doi (giong concat)
@@ -23,6 +25,31 @@ app.get('/ask', (req, res) => { // trình duyệt trả về giá trị
 
 app.get('/', (req, res) => {
     res.sendFile(path.resolve(__dirname, './public/home/index.html'))
+})
+
+app.get('/detail/:idQuestion', (req, res) => {
+    res.sendFile(path.resolve(__dirname, './public/detail/detail.html'));
+    // const {idQuestion} = req.params;
+    const { idQuestion } = req.params;
+    // const { type } = req.body;
+
+    let data;
+    try {
+        data = JSON.parse(fs.readFileSync('data.json'))
+    } catch (err) {
+        data = [];
+    }
+
+    const foundQuestion = data.find(
+        question => {
+            const sameId = parseInt(question.__id) === parseInt(idQuestion);
+            return sameId;
+        }
+    );
+
+    if (!foundQuestion) {
+        return res.send({ success: 0, })
+    }
 })
 
 app.get('/random-question', (req, res) => {
@@ -69,28 +96,35 @@ app.put('/add-vote/:idQuestion', (req, res) => { // express hỗ trợ bắt pra
         }
     );
 
-    if (foundQuestion) {
+
+    // nếu người dùng gửi lên ...
+
+    if (!foundQuestion) {
         return res.send({
-            success: 1,
-            data: foundQuestion
+            success: 0,
+            data: null
         })
     }
-    
-    if(type ==='yes'){
-        
+    // tương tự bên trên
+    if (type === 'yes' || type === 'no') {
+        foundQuestion[type]++;
+    }
+    else {
+        return res.send(({
+            success: 0,
+            data: null
+        }))
     }
 
+
+    fs.writeFileSync('./data.json', JSON.stringify(data))
+
     return res.send({
-        success: 0,
-        data: []
+        success: 1,
+        data: foundQuestion
     })
 });
 
-
-
-// app.get('/style.css', (req, res) => {
-//     res.sendFile(path.resolve(__dirname, './style.css'));
-// })
 
 app.post('/create-question', (req, res) => {
     const data = require('./data.json');
